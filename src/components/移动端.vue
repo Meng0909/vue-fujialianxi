@@ -2,7 +2,9 @@
   <div class="wrap">
     <div class="nav_left" id="navLeft">
       <div class="nav_content" >
-        <span v-for="(obj,index) in arr" :key="index" :class="{active:index === findIndex}" @click="btn(index)">{{obj.first_name}}></span>
+        <span v-for="(obj,index) in arr" :key="index" 
+        :class="{active:index === findIndex}"
+         @click="btn(index)">{{obj.first_name}}></span>
       </div>
     </div>
     <div class="down">
@@ -104,7 +106,7 @@ export default {
       findIndex:0
     };
   },
-  methods:{
+  methods:{ 
     btn(index){
         this.findIndex = index
     }

@@ -26,14 +26,15 @@
 
             <!-- 如果价格超过100，就有red这个类 -->
             <td :class="{ red: item.price > 100 }">{{ item.price }}</td>
-            <td>{{ item.time }}</td>
+            <td>{{ item.time | format }}</td>
             <td><a href="#" @click.prevent="del(item.id)">删除</a></td>
           </tr>
-          <!-- <tr style="background-color: #EEE">
+          <!-- 总价，平均价区域 -->
+          <tr style="background-color: #EEE">
               <td>统计:</td>
-              <td colspan="2">总价钱为: 0</td>
-              <td colspan="2">平均价: 0</td>
-          </tr> -->
+              <td colspan="2">总价钱为: {{allPrice}}</td>
+              <td colspan="2">平均价: {{averageprice}}</td>
+          </tr>
         </tbody>
         <!-- 
         <tfoot >
@@ -81,16 +82,20 @@
 // 3. 下载bootstrap, main.js引入bootstrap.css
 // 4. 把list数组 - 铺设表格
 // 5. 修改价格颜色
+
+// 引入moment
+import moment from 'moment'
 export default {
   data() {
     return {
-      list: [
-        { id: 100, name: '衣服', price: 199, time: new Date('2010-08-12') },
-        { id: 101, name: '裤子', price: 34, time: new Date('2013-09-01') },
-        { id: 102, name: '鞋', price: 25.4, time: new Date('2018-11-22') },
-        { id: 103, name: '头发', price: 19900, time: new Date('2020-12-12') },
-      ],
-      name: '',
+      list:JSON.parse(localStorage.getItem('list')) || [],
+      // list: [
+      //   { id: 100, name: '衣服', price: 199, time: new Date('2010-08-12') },
+      //   { id: 101, name: '裤子', price: 34, time: new Date('2013-09-01') },
+      //   { id: 102, name: '鞋', price: 25.4, time: new Date('2018-11-22') },
+      //   { id: 103, name: '头发', price: 19900, time: new Date('2020-12-12') },
+      // ],
+      name: '', 
       price: 0,
     }
   },
@@ -130,6 +135,37 @@ export default {
     // findIndex==>对应的数据的索引号
     // 数组删除对应的数据==>splice(索引号，删除的个数)
   },
+  //总价/平均区域
+  computed:{
+    allPrice(){
+      // //取值
+      // this.list.reduce((sum,next)=>{
+      //   return (sum=sum+next.price)
+      // }0)
+      return this.list
+      .reduce((sum,next)=>(sum=sum+ +next.price),0)
+      // .toFixed(2)
+    },
+    averageprice(){
+      return (this.allPrice / this.list.length).toFixed(2)
+    }
+  },
+  //时间格式区域
+  filters:{
+    format(val){
+      return moment(val).format('YYYY-MM-DD')
+    }
+  },
+  watch:{
+    list:{
+      handler(newVal){
+        localStorage.setItem('list',JSON.stringify(newVal))
+      },
+      deep:true,  
+    
+      // immediate:true
+    }
+  }
 }
 </script>
 
